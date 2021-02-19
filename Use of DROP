@@ -1,0 +1,71 @@
+Filter, Drop Nulls, Dedupe
+Use data_08_v1.csv and data_18_v1.csv. You should've created these data files in the previous section: Cleaning Column Labels.
+
+# load datasets
+import pandas as pd
+df_08 = pd.read_csv('data_08_v1.csv')
+df_18 = pd.read_csv('data_18_v1.csv') 
+# view dimensions of dataset
+df_08.shape
+(2404, 14)
+# view dimensions of dataset
+df_18.shape
+(1611, 14)
+Filter by Certification Region
+# filter datasets for rows following California standards
+df_18 = df_18.query('cert_region == "CA"')
+df_08 = df_08.query('cert_region == "CA"')
+# confirm only certification region is California
+df_08['cert_region'].unique()
+array(['CA'], dtype=object)
+​
+# confirm only certification region is California
+df_18['cert_region'].unique()
+array(['CA'], dtype=object)
+# drop certification region columns form both datasets
+df_08 = df_08.drop(['cert_region'], axis=1)
+df_08.shape
+(1084, 13)
+df_18 = df_18.drop(['cert_region'], axis=1)
+---------------------------------------------------------------------------
+KeyError                                  Traceback (most recent call last)
+<ipython-input-25-38e77f06fd09> in <module>()
+----> 1 df_18 = df_18.drop(['cert_region'], axis=1)
+
+/opt/conda/lib/python3.6/site-packages/pandas/core/frame.py in drop(self, labels, axis, index, columns, level, inplace, errors)
+   3695                                            index=index, columns=columns,
+   3696                                            level=level, inplace=inplace,
+-> 3697                                            errors=errors)
+   3698 
+   3699     @rewrite_axis_style_signature('mapper', [('copy', True),
+
+/opt/conda/lib/python3.6/site-packages/pandas/core/generic.py in drop(self, labels, axis, index, columns, level, inplace, errors)
+   3109         for axis, labels in axes.items():
+   3110             if labels is not None:
+-> 3111                 obj = obj._drop_axis(labels, axis, level=level, errors=errors)
+   3112 
+   3113         if inplace:
+
+/opt/conda/lib/python3.6/site-packages/pandas/core/generic.py in _drop_axis(self, labels, axis, level, errors)
+   3141                 new_axis = axis.drop(labels, level=level, errors=errors)
+   3142             else:
+-> 3143                 new_axis = axis.drop(labels, errors=errors)
+   3144             result = self.reindex(**{axis_name: new_axis})
+   3145 
+
+/opt/conda/lib/python3.6/site-packages/pandas/core/indexes/base.py in drop(self, labels, errors)
+   4402             if errors != 'ignore':
+   4403                 raise KeyError(
+-> 4404                     '{} not found in axis'.format(labels[mask]))
+   4405             indexer = indexer[~mask]
+   4406         return self.delete(indexer)
+
+KeyError: "['cert_region'] not found in axis"
+
+df_18.shape()
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+<ipython-input-28-f7e9a09a487b> in <module>()
+----> 1 df_18.shape()
+
+TypeError: 'tuple' object is not callable
